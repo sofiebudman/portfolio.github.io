@@ -221,12 +221,12 @@
         .polaroid img { width: 100%; display: block; filter: saturate(0.9); }
 
         .skill-pills {
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-            align-items: center;
-        }
-
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    max-width: 300px;
+}
         .pill {
             background: rgba(160,82,45,0.1);
             border: 1px solid rgba(160,82,45,0.28);
@@ -557,6 +557,7 @@
                     <span class="pill">Java</span>
                     <span class="pill">Bioinformatics</span>
                     <span class="pill">ML</span>
+                    <span class="pill">Bioengineering</span>
                 </div>
             </div>
             <div class="reveal">
