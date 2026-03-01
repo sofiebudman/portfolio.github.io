@@ -3,52 +3,566 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
     <title>Sofie Budman</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Mono:wght@300;400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:       #f7f2ea;
+            --cream:    #efe9de;
+            --parchment:#e8dfd1;
+            --warm-mid: #d4c4ab;
+            --brown-lt: #c4a882;
+            --brown:    #8b6340;
+            --brown-dk: #5c3d1e;
+            --ink:      #2e1f0f;
+            --muted:    #9c7e5f;
+            --border:   rgba(139,99,64,0.15);
+            --accent:   #a0522d;
+            --accent2:  #c8763a;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Lora', Georgia, serif;
+            background: var(--bg);
+            color: var(--ink);
+            overflow-x: hidden;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.1rem 3rem;
+            background: rgba(247,242,234,0.88);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(160,82,45,0.2);
+        }
+
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            font-size: 1.15rem;
+            letter-spacing: 0.04em;
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+
+        .nav-links a {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* ── HERO ── */
+        #home {
+            min-height: 100svh;
+            display: flex;
+            align-items: center;
+            padding: 7rem 3rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #home::before {
+            content: '';
+            position: absolute;
+            right: -10vw;
+            top: 50%;
+            transform: translateY(-50%);
+            width: min(70vw, 700px);
+            height: min(70vw, 700px);
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(200,118,58,0.18) 0%, rgba(160,82,45,0.12) 40%, transparent 70%);
+            opacity: 1;
+        }
+
+        #home::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, var(--brown-lt) 1px, transparent 1px);
+            background-size: 32px 32px;
+            opacity: 0.18;
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.7s 0.15s forwards;
+        }
+        .hero-eyebrow::before { content: '✦'; font-size: 0.6rem; }
+
+        h1.hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: clamp(4.5rem, 11vw, 10rem);
+            line-height: 0.88;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            opacity: 0;
+            animation: fadeUp 0.85s 0.3s forwards;
+        }
+        h1.hero-title em { font-style: italic; color: var(--accent); }
+
+        .hero-sub {
+            margin-top: 2rem;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--muted);
+            line-height: 1.7;
+            max-width: 420px;
+            opacity: 0;
+            animation: fadeUp 0.85s 0.45s forwards;
+        }
+
+        .hero-ctas {
+            margin-top: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            opacity: 0;
+            animation: fadeUp 0.85s 0.6s forwards;
+        }
+
+        .btn-filled {
+            background: var(--brown-dk);
+            color: var(--bg);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 0.85rem 1.75rem;
+            text-decoration: none;
+            border-radius: 100px;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .btn-filled:hover { background: var(--accent); transform: translateY(-1px); }
+
+        .btn-soft {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: color 0.2s;
+        }
+        .btn-soft:hover { color: var(--accent); }
+
+        /* ── ABOUT ── */
+        #about {
+            background: var(--cream);
+            padding: 6rem 3rem;
+            border-top: 2px solid rgba(160,82,45,0.3);
+            border-bottom: 2px solid rgba(160,82,45,0.3);
+        }
+
+        .about-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .about-photo-side {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .polaroid {
+            background: #fff;
+            padding: 10px 10px 28px;
+            box-shadow: 0 8px 32px rgba(160,82,45,0.18), 0 2px 6px rgba(160,82,45,0.1);
+            width: 180px;
+            transform: rotate(-2.5deg);
+            transition: transform 0.3s;
+            border-top: 3px solid rgba(160,82,45,0.15);
+        }
+        .polaroid:hover { transform: rotate(0deg) scale(1.03); }
+        .polaroid img { width: 100%; display: block; filter: saturate(0.9); }
+
+        .skill-pills {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            align-items: center;
+        }
+
+        .pill {
+            background: rgba(160,82,45,0.1);
+            border: 1px solid rgba(160,82,45,0.28);
+            color: var(--accent);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.63rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.3rem 0.75rem;
+            border-radius: 100px;
+            white-space: nowrap;
+        }
+
+        .section-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.68rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .section-label::before { content: '—'; }
+
+        h2.about-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            font-size: clamp(2.4rem, 4vw, 4rem);
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.75rem;
+        }
+        h2.about-title em { font-style: italic; color: var(--accent); }
+
+        .about-body {
+            font-size: 1.1rem;
+            line-height: 1.85;
+            color: #4a3420;
+            margin-bottom: 2.5rem;
+            max-width: 520px;
+        }
+
+        .about-ctas { display: flex; gap: 1rem; }
+
+        /* ── PROJECTS ── */
+        #projects { padding: 6rem 3rem; background: var(--bg); }
+
+        .projects-header {
+            max-width: 1100px;
+            margin: 0 auto 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .projects-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            font-size: clamp(2.4rem, 5vw, 4.5rem);
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+        .projects-header h2 em { font-style: italic; color: var(--accent); }
+
+        /* ── BENTO ── */
+        .bento {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1rem;
+        }
+
+        .p-card {
+            background: var(--cream);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--ink);
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+        /* cards with links inside are not themselves <a> tags */
+        .p-card-wrap {
+            background: var(--cream);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            color: var(--ink);
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .p-card-wrap:hover, .p-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(92,61,30,0.12);
+        }
+
+        /* bento spans */
+        .span-7 { grid-column: span 7; }
+        .span-5 { grid-column: span 5; }
+        .span-4 { grid-column: span 4; }
+        .span-6 { grid-column: span 6; }
+
+        .p-card:nth-child(1) .card-blob,
+        .p-card-wrap.blob .card-blob,
+        .p-card.blob .card-blob {
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--warm-mid) 0%, transparent 70%);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .card-blob {
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--warm-mid) 0%, transparent 70%);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .card-tag {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--bg);
+            background: var(--accent);
+            padding: 0.25rem 0.65rem;
+            border-radius: 100px;
+            width: fit-content;
+        }
+
+        .card-icon { font-size: 2.2rem; line-height: 1; margin-bottom: 0.25rem; }
+
+        .p-card h3, .p-card-wrap h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            font-size: 1.5rem;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+        .large-title h3 { font-size: 1.9rem; }
+
+        .p-card p, .p-card-wrap p {
+            font-size: 0.92rem;
+            line-height: 1.72;
+            color: var(--muted);
+            flex: 1;
+        }
+
+        /* ── multi-link footer ── */
+        .card-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .card-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent);
+            background: rgba(160,82,45,0.08);
+            border: 1px solid rgba(160,82,45,0.2);
+            border-radius: 100px;
+            padding: 0.28rem 0.7rem;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+            white-space: nowrap;
+        }
+        .card-link-btn:hover {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+
+        /* single-link footer styles removed — all cards now use .card-links */
+
+        /* accent card variants */
+        .bg-parchment { background: var(--parchment); }
+        .bg-warm      { background: #ece2d4; }
+
+        /* first place badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(200,118,58,0.15);
+            border: 1px solid rgba(200,118,58,0.35);
+            color: var(--accent2);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.25rem 0.65rem;
+            border-radius: 100px;
+            width: fit-content;
+            margin-top: 0.1rem;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--brown-dk);
+            padding: 2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        footer p {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(247,242,234,0.45);
+        }
+        .footer-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: 1.1rem;
+            letter-spacing: 0.06em;
+            color: rgba(247,242,234,0.8);
+        }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .reveal-stagger > * {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.55s ease, transform 0.55s ease;
+        }
+        .reveal-stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:0s; }
+        .reveal-stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:0.08s; }
+        .reveal-stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:0.16s; }
+        .reveal-stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:0.24s; }
+        .reveal-stagger.visible > *:nth-child(5) { opacity:1; transform:none; transition-delay:0.32s; }
+        .reveal-stagger.visible > *:nth-child(6) { opacity:1; transform:none; transition-delay:0.40s; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            nav { padding: 1rem 1.5rem; }
+            #home { padding: 7rem 1.5rem 3.5rem; }
+            .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .about-photo-side { flex-direction: row; align-items: flex-start; gap: 2rem; }
+            #about { padding: 4rem 1.5rem; }
+            #projects { padding: 4rem 1.5rem; }
+            .bento { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+            .span-7, .span-5, .span-4, .span-6 { grid-column: span 1 !important; }
+            .large-title h3 { font-size: 1.5rem; }
+            footer { flex-direction: column; gap: 0.5rem; padding: 1.5rem; text-align: center; }
+        }
+
+        @media (max-width: 560px) {
+            .bento { grid-template-columns: 1fr; }
+            .about-photo-side { flex-direction: column; align-items: center; }
+            .projects-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+        }
+    </style>
 </head>
+<body>
 
-<body class="scroll-smooth m-0 font-sans">
+    <!-- NAV -->
+    <nav>
+        <a href="#home" class="nav-logo">Sofie Budman</a>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="https://www.linkedin.com/in/sofie-budman-42a768324/" target="_blank">LinkedIn</a></li>
+        </ul>
+    </nav>
 
-    <!-- HERO SECTION -->
-    <section id="home" class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-white px-6">
-        <div class="text-center max-w-3xl">
-
-            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-semibold text-gray-900">
-                Sofie Budman
-            </h1>
-
-            <p class="mt-6 text-base sm:text-lg lg:text-xl text-gray-600">
-                Computer Science ∩ Biology | Machine Learning for Medical Innovation
-            </p>
-
-            <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6">
-
-                <a href="#about"
-                   class="bg-indigo-600 text-white px-6 py-3 rounded-md font-semibold shadow-md
-                          transition duration-300 hover:scale-105 hover:bg-indigo-500">
-                    About Me
-                </a>
-
-                <a href="#projects"
-                   class="text-gray-900 font-semibold hover:text-indigo-600 transition">
-                    Projects →
-                </a>
-
+    <!-- HERO -->
+    <section id="home">
+        <div class="hero-inner">
+            <div class="hero-eyebrow">Computer Science &amp; Biology</div>
+            <h1 class="hero-title">Sofie<br><em>Budman</em></h1>
+            <p class="hero-sub">Computer Science ∩ Biology — Machine Learning for Medical Innovation</p>
+            <div class="hero-ctas">
+                <a href="#about" class="btn-filled">About Me</a>
+                <a href="#projects" class="btn-soft">See my work →</a>
             </div>
         </div>
     </section>
 
-    <!-- ABOUT SECTION -->
-    <section id="about" class="min-h-screen flex items-center bg-stone-100 px-6 py-16">
-        <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12">
-
-            <!-- Text -->
-            <div class="lg:w-1/2 text-center lg:text-left">
-                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-semibold text-gray-900">
-                    About Me
-                </h2>
-
-                <p class="mt-6 text-base sm:text-lg text-gray-700 leading-relaxed">
+    <!-- ABOUT -->
+    <section id="about">
+        <div class="about-grid">
+            <div class="about-photo-side reveal">
+                <div class="polaroid">
+                    <img src="assets/me.JPG" alt="Photo of Sofie">
+                </div>
+                <div class="skill-pills">
+                    <span class="pill">Python</span>
+                    <span class="pill">R</span>
+                    <span class="pill">Java</span>
+                    <span class="pill">Bioinformatics</span>
+                    <span class="pill">ML</span>
+                </div>
+            </div>
+            <div class="reveal">
+                <div class="section-label">About Me</div>
+                <h2 class="about-title">Hi, I'm<br><em>Sofie</em></h2>
+                <p class="about-body">
                     I am a dedicated and enthusiastic high school student eager to contribute
                     my skills and passion to an internship. With technical skills in Python,
                     R, and Java, and research experience in bioinformatics, I bring a strong
@@ -56,112 +570,114 @@
                     environments and hold leadership roles on my school's FRC robotics and
                     girls' basketball teams.
                 </p>
+                <div class="about-ctas">
+                    <a href="https://www.linkedin.com/in/sofie-budman-42a768324/" target="_blank" class="btn-filled">LinkedIn</a>
+                    <a href="https://drive.google.com/file/d/1I_Bf9arxiC69O4TV6Pod-GQdPDp25OIY/view?usp=sharing" target="_blank" class="btn-soft">Resume →</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+    <!-- PROJECTS -->
+    <section id="projects">
+        <div class="projects-header reveal">
+            <h2>My <em>Projects</em></h2>
+            <div class="section-label">Selected Work</div>
+        </div>
 
-                    <a href="https://www.linkedin.com/in/sofie-budman-42a768324/"
-                       target="_blank"
-                       class="bg-indigo-600 text-white px-6 py-3 rounded-md font-semibold
-                              transition duration-300 hover:scale-105 hover:bg-indigo-500">
-                        LinkedIn
-                    </a>
+        <div class="bento reveal-stagger">
 
-                    <a href="https://drive.google.com/file/d/1I_Bf9arxiC69O4TV6Pod-GQdPDp25OIY/view?usp=sharing"
-                       target="_blank"
-                       class="bg-indigo-600 text-white px-6 py-3 rounded-md font-semibold
-                              transition duration-300 hover:scale-105 hover:bg-indigo-500">
-                        Resume
-                    </a>
-
+            <!-- 1. Dysarthria — wide, multi-link -->
+            <div class="p-card-wrap span-7 bg-parchment blob large-title">
+                <div class="card-blob"></div>
+                <span class="card-tag">Machine Learning · Audio</span>
+                <div class="card-icon">🎙️</div>
+                <h3>Dysarthria Detection &amp; Assistive Speech</h3>
+                <p>We present a unified, multilingual AI framework for dysarthria, a speech disorder linked with neurological diseases. Our system implements detection, severity classification, speech restoration, automatic speech recognition, emotion recognition, and voice cloning in one pipeline. Achieving up to 97% accuracy across English, Russian, and German, the project demonstrates strong cross-lingual generalization and transfer learning, enabling accessible diagnosis and removing communication barriers.</p>
+                <div class="card-links">
+                    <a href="https://github.com/sofiebudman/Dysarthria_App" target="_blank" class="card-link-btn">⌥ GitHub</a>
+                    <a href="https://arxiv.org/pdf/2510.03986v1" target="_blank" class="card-link-btn">↗ Research Paper</a>
+                    <a href="https://drive.google.com/file/d/1pSyawvJ7wALeChS8toLf6DvZ-rNlWRT-/view?usp=sharing" target="_blank" class="card-link-btn">▶ Video Presentation</a>
                 </div>
             </div>
 
-            <!-- Image -->
-            <div class="lg:w-1/2 flex justify-center">
-                <img src="assets/me.JPG"
-                     alt="Photo of Sofie"
-                     class="w-48 sm:w-64 lg:w-80 rounded-2xl shadow-lg object-cover">
+            <!-- 2. MIT Beaverworks — narrow -->
+            <div class="p-card-wrap span-5">
+                <span class="card-tag">Applied AI</span>
+                <div class="card-icon">🤖</div>
+                <h3>MIT Beaverworks</h3>
+                <p>Various Machine Learning Notebooks created during the MIT Beaverworks Summer Institute including, Time Series Signal Processing for Sleep State detection, Random Forest Detection of Hyperthyroidism, and Breast Cancer detection with Convolutional Neural Networks.</p>
+                <div class="card-links">
+                    <a href="https://github.com/sofiebudman/Beaverworks" target="_blank" class="card-link-btn">⌥ GitHub</a>
+                </div>
+            </div>
+
+            <!-- 3. Berkeley Bioengineering — wide, multi-link -->
+            <div class="p-card-wrap span-7 blob large-title">
+                <div class="card-blob"></div>
+                <span class="card-tag">Bioengineering · Research</span>
+                <div class="card-icon">🏆</div>
+                <h3>Berkeley Bioengineering Competition</h3>
+                <div class="badge">🥇 1st place — 60+ teams nationwide</div>
+                <p>Proposed a smart contact lens concept to address high complication rates following corneal transplants and injuries. The design integrates electrical stimulation and localized drug delivery within a biocompatible hydrogel framework to improve post-operative care with an active healing approach. Presented research to UC Berkeley professors and undergraduates; recognized for innovation, scientific rigor, communication, and feasibility at Berkeley Bioengineering Competition.</p>
+                <div class="card-links">
+                    <a href="https://docs.google.com/presentation/d/13_A-_rnO3LenNI7gS9G6xyrFS06qSPTw1Q1GMotW3TA/edit?usp=sharing" target="_blank" class="card-link-btn">↗ Research Poster</a>
+                    <a href="https://docs.google.com/presentation/d/15OiQIuNRk8xWMrmAN0JWDhL6fvoIZ23_rIx_N-d6xWI/edit?usp=sharing" target="_blank" class="card-link-btn">↗ Presentation</a>
+                    <a href="https://drive.google.com/file/d/1_JOZ9EyzV6QUihusAti5yn1DktsMZsU2/view?usp=sharing" target="_blank" class="card-link-btn">▶ Video</a>
+                </div>
+            </div>
+
+            <!-- 4. Scaffold Matrix — narrow -->
+            <div class="p-card-wrap span-5 bg-warm">
+                <span class="card-tag">Bioinformatics · Genomics</span>
+                <div class="card-icon">🧬</div>
+                <h3>Scaffold Matrix Attachment Regions</h3>
+                <p>Machine learning-based detection of scaffold/matrix attachment regions (S/MARs) in the human genome, using Random Forest, XGBoost, KNN, and Neural Network models to advance research into chromatin organization and cancer.</p>
+                <div class="card-links">
+                    <a href="https://docs.google.com/presentation/d/1u66OxJzjSAv72Ntr1hdv1hcSKsKUeO1ADP9zMnbmfF0/edit?usp=sharing" target="_blank" class="card-link-btn">↗ Poster Presentation</a>
+                </div>
+            </div>
+
+            <!-- 5. Differential Gene Expression — wide -->
+            <div class="p-card-wrap span-7 bg-parchment blob large-title">
+                <div class="card-blob"></div>
+                <span class="card-tag">Genomics · Space Biology</span>
+                <div class="card-icon">🚀</div>
+                <h3>Differential Gene Expression Analysis</h3>
+                <p>Analyzed the NASA OSD-254 dataset to investigate microgravity's effects on skin immune genes in mice. Differential expression revealed upregulation of Skint3 and Skint9, with pathway enrichment confirming activation of epidermal and immune response pathways, suggesting skin–immune adaptation in microgravity and potential targets for astronaut health during long-duration missions.</p>
+                <div class="card-links">
+                    <a href="https://docs.google.com/presentation/d/1KoxNZUUX_kMIUTPH7V2jY2ziV-rxsUK7/edit?usp=sharing&ouid=110196575750332138381&rtpof=true&sd=true" target="_blank" class="card-link-btn">↗ Research Poster</a>
+                </div>
+            </div>
+
+            <!-- 6. Unknown Gene — narrow -->
+            <div class="p-card-wrap span-5">
+                <span class="card-tag">Bioinformatics · Research</span>
+                <div class="card-icon">🔬</div>
+                <h3>Unknown Gene Project</h3>
+                <p>Exploring the function and significance of Transmembrane Protein 62 (TMEM62) using biological databases and computational tools. This project analyzes gene expression, protein structure, and evolutionary conservation through resources like NCBI, UniProt, and Ensembl to uncover potential roles in cellular processes and disease mechanisms.</p>
+                <div class="card-links">
+                    <a href="https://drive.google.com/file/d/1-E_rC3lhdT8ikUWDo4WPj6pgTEBWhmFI/view?usp=sharing" target="_blank" class="card-link-btn">↗ View Report</a>
+                </div>
             </div>
 
         </div>
     </section>
 
-    <!-- PROJECTS SECTION -->
-    <section id="projects" class="bg-stone-50 px-6 py-20">
-        <div class="max-w-6xl mx-auto text-center">
+    <!-- FOOTER -->
+    <footer>
+        <p>CS × Biology × ML</p>
+        <span class="footer-name">Sofie Budman</span>
+        <p>Portfolio — 2025</p>
+    </footer>
 
-            <h2 class="text-4xl sm:text-6xl font-semibold text-gray-900 mb-12">
-                Projects
-            </h2>
-
-            <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-
-                <!-- Project Card -->
-                <div class="bg-white p-6 rounded-xl shadow-md transition duration-300 hover:shadow-2xl hover:scale-105">
-                    <h3 class="text-xl font-semibold mb-3">
-                        Dysarthria Detection & Assistive Speech
-                    </h3>
-                    <p class="text-gray-600 text-sm sm:text-base mb-4">
-                        Multilingual audio-based detection and voice restoration of
-                        Dysarthria using machine learning and signal processing techniques.
-                    </p>
-                    <a href="https://github.com/sofiebudman/Dysarthria_App"
-                       target="_blank"
-                       class="text-indigo-600 font-semibold hover:text-indigo-800 transition">
-                        View Project →
-                    </a>
-                </div>
-
-                <!-- Project Card -->
-                <div class="bg-white p-6 rounded-xl shadow-md transition duration-300 hover:shadow-2xl hover:scale-105">
-                    <h3 class="text-xl font-semibold mb-3">
-                        MIT Beaverworks
-                    </h3>
-                    <p class="text-gray-600 text-sm sm:text-base mb-4">
-                        Machine learning notebooks and applied AI projects.
-                    </p>
-                    <a href="https://github.com/sofiebudman/Beaverworks"
-                       target="_blank"
-                       class="text-indigo-600 font-semibold hover:text-indigo-800 transition">
-                        View Project →
-                    </a>
-                </div>
-
-                <!-- Project Card -->
-                <div class="bg-white p-6 rounded-xl shadow-md transition duration-300 hover:shadow-2xl hover:scale-105">
-                    <h3 class="text-xl font-semibold mb-3">
-                        Scaffold Matrix Attachment Regions
-                    </h3>
-                    <p class="text-gray-600 text-sm sm:text-base mb-4">
-                        Machine learning–based detection of scaffold matrix
-                        attachment regions in genomic sequences.
-                    </p>
-                    <a href="https://docs.google.com/presentation/d/1u66OxJzjSAv72Ntr1hdv1hcSKsKUeO1ADP9zMnbmfF0/edit?usp=sharing"
-                       target="_blank"
-                       class="text-indigo-600 font-semibold hover:text-indigo-800 transition">
-                        View Project →
-                    </a>
-                </div>
-
-                <!-- Project Card -->
-                <div class="bg-white p-6 rounded-xl shadow-md transition duration-300 hover:shadow-2xl hover:scale-105">
-                    <h3 class="text-xl font-semibold mb-3">
-                        Unknown Gene Project
-                    </h3>
-                    <p class="text-gray-600 text-sm sm:text-base mb-4">
-                        Using bioinformatics databases to infer functional
-                        characteristics of previously unannotated genes.
-                    </p>
-                    <a href="https://drive.google.com/file/d/1-E_rC3lhdT8ikUWDo4WPj6pgTEBWhmFI/view?usp=sharing"
-                       target="_blank"
-                       class="text-indigo-600 font-semibold hover:text-indigo-800 transition">
-                        View Project →
-                    </a>
-                </div>
-
-            </div>
-        </div>
-    </section>
+    <script>
+        const els = document.querySelectorAll('.reveal, .reveal-stagger');
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.06 });
+        els.forEach(el => obs.observe(el));
+    </script>
 
 </body>
 </html>
